@@ -1,15 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# @Time : 2021/7/18 10:01
+# @Time : 2021/7/9 15:03
 # @Author : liu yang
 # @Desc: 提取 EXCEL 数据信息
-
+from abc import ABC
 
 import pandas as pd
 import numpy as np
 
+from interface.extract_operation import ExtractOperation
 
-class ExtractHelper:
+
+class ExtractHelperB(ExtractOperation, ABC):
 
     @staticmethod
     def get_info(df_info):
@@ -19,23 +21,24 @@ class ExtractHelper:
         """
         df_info.dropna(axis=1, how='any', inplace=True)
         df_info.columns = list(range(len(df_info.columns)))
+        # return df_info.iloc[0][1], df_info.iloc[0][3], df_info.iloc[0][5]
         return df_info.iloc[0][1], df_info.iloc[0][3]
 
     @staticmethod
-    def get_record(df_record, date_range, col_cnt, mode='%Y%m%d'):
+    def get_record(df_record, start_date, end_date, mode='%Y%m%d'):
         """
-        :param col_cnt: 读取前 n 列数据
-        :param date_range: list，开始、结束日期
+
+        :param start_date: 开始日期
+        :param end_date: 结束日期
         :param df_record: 取序号以及考勤数据行
         :param mode: 格式为 YYYYMMDD
         :return: 返回打卡记录以及对应的日期
         """
-        # df_record.dropna(axis=1, how='all', inplace=True)
+        # df_record = df_record.drop(0, axis=1)
+        col_cnt = pd.date_range(start_date, end_date).size
         df_record = df_record.iloc[:, :col_cnt]
-        df_record.columns = pd.date_range(date_range[0], date_range[1])
+        df_record.columns = pd.date_range(start_date, end_date)
         df_record.columns = df_record.columns.to_series().apply(lambda x: x.strftime(mode))
-        # df_record.columns = df_record.iloc[0]
-        # df_record.drop([0],  inplace=True)
         return df_record
 
 
@@ -50,4 +53,4 @@ if __name__ == "__main__":
                        nrows=2,
                        skiprows=5,
                        header=None)
-    ExtractHelper.get_record(df, ['6/1/2021', '6/30/2021'])
+    ExtractHelperB.get_record(df, ['6/1/2021', '6/30/2021'])
