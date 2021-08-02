@@ -32,5 +32,5 @@ if __name__ == "__main__":
     file_path = PathHelper.get_package_dir('file')
     today = datetime.date.today().strftime('%Y-%m-%d')
     dirs = file_path + '/' + today + '/b'
-    PathHelper(dirs).dir_make()
+    PathHelper.dir_make(dirs)
     Main(dirs).run()

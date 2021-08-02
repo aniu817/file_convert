@@ -57,19 +57,10 @@ class EntryA:
                         output = output.append(pd.DataFrame(dic))
 
         try:
-            output.to_excel(self.out_path(), index=False)
+            output.to_excel(PathHelper.out_path(self.file, 'output', '/a'), index=False)
             print('写入完成')
         except:
             print('文件持久化错误...')
-
-    def out_path(self):
-        file_path = PathHelper.get_package_dir('output')
-        today = datetime.date.today().strftime('%Y-%m-%d')
-        dirs = file_path + '/' + today + '/a'
-        PathHelper(dirs).dir_make()
-        output_name = os.path.basename(self.file).split('.')[0] + '-转换.xlsx'
-        output_path = dirs + '/' + output_name
-        return output_path
 
 
 if __name__ == "__main__":
